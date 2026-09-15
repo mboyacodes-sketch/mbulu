@@ -7,6 +7,7 @@ build
 coverage
 dist
 
+# Ignore deps, secrets, and tooling from the Docker build context.
 # Git / IDE / local
 .git
 .github
@@ -17,6 +18,9 @@ dist
 !README.md
 .gitignore
 .dockerignore
+
+# Screenshots are for docs only
+screenshots
 
 # Env and secrets — pass at runtime via Compose / -e
 .env
