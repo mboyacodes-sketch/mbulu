@@ -48,7 +48,9 @@
   --font-ui: var(--font-body), system-ui, sans-serif;
   --font-brand: var(--font-display), var(--font-body), system-ui, sans-serif;
   --text-message: 1.05rem;
-  --text-message-mobile: 1.02rem;
+  --text-message-mobile: 0.9375rem;
+  --text-ui-mobile: 0.875rem;
+  --text-brand-mobile: 1.75rem;
 
   /* Typing bubble (iMessage-like) */
   --typing-bg: #e9e9eb;
@@ -1133,10 +1135,78 @@ body {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
+  .mbulu-header-brand {
+    font-size: 0.8125rem;
+  }
+
+  .mbulu-header-btn {
+    min-height: 2rem;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.7rem;
+  }
+
+  .mbulu-empty-title {
+    font-size: var(--text-brand-mobile);
+  }
+
+  .mbulu-empty-copy {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .mbulu-suggestion {
+    min-height: 2.25rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .mbulu-message {
+    font-size: var(--text-message-mobile);
+    line-height: 1.55;
+  }
+
+  /* Inherit message size — do not bump markdown back up to 1rem. */
   .md-content {
-    font-size: 1rem;
-    line-height: 1.65;
+    font-size: inherit;
+    line-height: 1.55;
+  }
+
+  .md-content h1 {
+    font-size: 1.28em;
+  }
+
+  .md-content h2 {
+    font-size: 1.16em;
+  }
+
+  .md-content h3 {
+    font-size: 1.06em;
+  }
+
+  .mbulu-composer-input,
+  .mbulu-input {
+    /* Keep ≥16px so iOS Safari does not zoom on focus. */
+    font-size: 16px;
+  }
+
+  .mbulu-hint {
+    font-size: 0.65rem;
+  }
+
+  .mbulu-gate-title {
+    font-size: var(--text-brand-mobile);
+  }
+
+  .mbulu-gate-copy {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .mbulu-error,
+  .mbulu-voice-copy,
+  .mbulu-voice-interim {
+    font-size: var(--text-ui-mobile);
   }
 
   .voice-orb {
