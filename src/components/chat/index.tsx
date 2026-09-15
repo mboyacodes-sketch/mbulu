@@ -9,44 +9,67 @@ import { MessageList } from "@/components/chat/message-list";
 import { VoicePanel } from "@/components/chat/voice-panel";
 
 export function Chat() {
-  const chat = useChat();
+  const {
+    ready,
+    accessRequired,
+    unlocked,
+    accessInput,
+    accessError,
+    isUnlocking,
+    setAccessInput,
+    unlock,
+    messages,
+    isStreaming,
+    lockSession,
+    startNewChat,
+    scrollerRef,
+    bottomRef,
+    sendMessage,
+    speech,
+    input,
+    setInput,
+    error,
+    textareaRef,
+    toggleVoice,
+    stopGeneration,
+  } = useChat();
 
-  if (!chat.ready) {
+  if (!ready) {
     return <div className="mbulu-shell" aria-hidden="true" />;
   }
 
-  if (chat.accessRequired && !chat.unlocked) {
+  if (accessRequired && !unlocked) {
     return (
       <AccessGate
-        accessInput={chat.accessInput}
-        accessError={chat.accessError}
-        isUnlocking={chat.isUnlocking}
-        onAccessInputChange={chat.setAccessInput}
-        onUnlock={() => void chat.unlock()}
+        accessInput={accessInput}
+        accessError={accessError}
+        isUnlocking={isUnlocking}
+        onAccessInputChange={setAccessInput}
+        onUnlock={() => void unlock()}
       />
     );
   }
 
-  const isEmpty = chat.messages.length === 0;
+  const isEmpty = messages.length === 0;
 
   return (
     <div className="mbulu-shell">
       <ChatHeader
-        accessRequired={chat.accessRequired}
+        accessRequired={accessRequired}
         showNewChat={!isEmpty}
-        disabled={chat.isStreaming}
-        onLock={chat.lockSession}
-        onNewChat={chat.startNewChat}
+        disabled={isStreaming}
+        onLock={lockSession}
+        onNewChat={startNewChat}
       />
 
-      <main ref={chat.scrollerRef} className="mbulu-scroller">
+      <main ref={scrollerRef} className="mbulu-scroller">
         {isEmpty ? (
-          <EmptyState onSuggest={(text) => void chat.sendMessage(text)} />
+          <EmptyState onSuggest={(text) => void sendMessage(text)} />
         ) : (
           <MessageList
-            messages={chat.messages}
-            isStreaming={chat.isStreaming}
-            bottomRef={chat.bottomRef}
+            messages={messages}
+            isStreaming={isStreaming}
+            bottomRef={bottomRef}
           />
         )}
       </main>
@@ -54,28 +77,24 @@ export function Chat() {
       <div className="mbulu-dock">
         <div className="mbulu-dock-fade" />
         <div className="mbulu-dock-inner">
-          {chat.speech.listening ? (
+          {speech.listening ? (
             <VoicePanel
-              draftText={chat.speech.draftText}
-              canSend={Boolean(
-                chat.speech.draftText.trim() || chat.input.trim(),
-              )}
-              onStop={chat.toggleVoice}
-              onSend={() =>
-                void chat.sendMessage(chat.speech.draftText || chat.input)
-              }
+              draftText={speech.draftText}
+              canSend={Boolean(speech.draftText.trim() || input.trim())}
+              onStop={toggleVoice}
+              onSend={() => void sendMessage(speech.draftText || input)}
             />
           ) : (
             <Composer
-              input={chat.input}
-              isStreaming={chat.isStreaming}
-              speechSupported={chat.speech.supported}
-              error={chat.error}
-              textareaRef={chat.textareaRef}
-              onInputChange={chat.setInput}
-              onSubmit={() => void chat.sendMessage(chat.input)}
-              onToggleVoice={chat.toggleVoice}
-              onStop={chat.stopGeneration}
+              input={input}
+              isStreaming={isStreaming}
+              speechSupported={speech.supported}
+              error={error}
+              textareaRef={textareaRef}
+              onInputChange={setInput}
+              onSubmit={() => void sendMessage(input)}
+              onToggleVoice={toggleVoice}
+              onStop={stopGeneration}
             />
           )}
         </div>
