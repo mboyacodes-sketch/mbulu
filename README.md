@@ -28,6 +28,26 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Configure values in `.env.local` only. Never commit that file.
 
+## Docker
+
+Requires Docker and Docker Compose. Env is read at **runtime** (not baked into the image).
+
+```bash
+cp .env.example .env.local   # fill CHAT_* values
+docker compose up --build
+```
+
+App: [http://localhost:3000](http://localhost:3000).
+
+```bash
+docker compose down
+# or one-shot without Compose:
+docker build -t mbulu:local .
+docker run --rm -p 3000:3000 --env-file .env.local mbulu:local
+```
+
+Set `CHAT_ALLOWED_ORIGINS` to the origin browsers use (for local Compose, `http://localhost:3000`).
+
 ## Environment
 
 Copy `.env.example` and fill in:
@@ -62,7 +82,7 @@ npm run test:watch
 
 GitHub Actions runs on every push and pull request to `main`:
 
-- `CI` — `npm ci`, lint, typecheck, tests, and production build
+- `CI` — `npm ci`, lint, typecheck, tests, production build, and Docker image build
 - `Deploy` — production deploy to Vercel on pushes to `main` (and manual `workflow_dispatch`)
 
 ### Deploy secrets
