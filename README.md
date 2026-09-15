@@ -80,22 +80,12 @@ npm run test:watch
 
 ## CI / CD
 
-GitHub Actions runs on every push and pull request to `main`:
+GitHub Actions (`CI`) runs on every push and pull request to `main`:
 
-- `CI` — `npm ci`, lint, typecheck, tests, production build, and Docker image build
-- `Deploy` — production deploy to Vercel on pushes to `main` (and manual `workflow_dispatch`)
+- `npm ci`, lint, typecheck, tests, production build
+- Docker image build (no push)
 
-### Deploy secrets
-
-Add these repository secrets (Settings → Secrets and variables → Actions), plus a GitHub Environment named `production` if you use environment protection:
-
-| Secret | Purpose |
-| --- | --- |
-| `VERCEL_TOKEN` | Vercel access token |
-| `VERCEL_ORG_ID` | Vercel team/org id |
-| `VERCEL_PROJECT_ID` | Vercel project id |
-
-Configure real chat env vars in the Vercel project (not in GitHub Actions). Until the Vercel secrets exist, the Deploy workflow will fail; CI still gates merges.
+Production deploys are **not** done by GitHub Actions. Use **Kamal** (see below) to build, push to GHCR, and deploy behind Caddy on the VPS.
 
 ## Kamal (VPS deploy behind Caddy)
 
