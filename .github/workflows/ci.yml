@@ -49,3 +49,24 @@ jobs:
           CHAT_MODEL: ci
           CHAT_SYSTEM_PROMPT: You are Mbulu in CI.
           CHAT_ALLOWED_ORIGINS: http://localhost:3000
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: mbulu:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
