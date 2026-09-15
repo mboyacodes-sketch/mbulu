@@ -1,0 +1,39 @@
+# Dependencies and build output
+node_modules
+npm-debug.log*
+.next
+out
+build
+coverage
+dist
+
+# Git / IDE / local
+.git
+.github
+.cursor
+.vscode
+.idea
+*.md
+!README.md
+.gitignore
+.dockerignore
+
+# Env and secrets — pass at runtime via Compose / -e
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+
+# Tests and tooling not needed in the image
+**/__tests__
+jest.config.ts
+jest.setup.ts
+eslint.config.mjs
+AGENTS.md
+CLAUDE.md
+
+# Misc
+.DS_Store
+.vercel
+*.tsbuildinfo
