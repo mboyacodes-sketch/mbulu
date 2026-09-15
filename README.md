@@ -97,6 +97,50 @@ Add these repository secrets (Settings → Secrets and variables → Actions), p
 
 Configure real chat env vars in the Vercel project (not in GitHub Actions). Until the Vercel secrets exist, the Deploy workflow will fail; CI still gates merges.
 
+## Kamal (VPS deploy behind Caddy)
+
+Production target: **https://mbulu.mboya.dev** on server `10.7.0.1`.
+
+Caddy already terminates TLS for `mboya.dev`. Kamal runs `kamal-proxy` on **localhost:3010** only (port 3001 is used by bashenga).
+
+1. On the VPS, add `config/Caddyfile.mbulu` to your Caddy config and reload Caddy.
+2. Point DNS for `mbulu.mboya.dev` at the server (if not already).
+3. Create a GitHub PAT with `write:packages` + `read:packages` (classic token), or fine-grained **Packages** read/write on `mboyacodes-sketch/mbulu`.
+4. If the org uses SSO, authorize the token for **mboyacodes-sketch** at [github.com/settings/tokens](https://github.com/settings/tokens).
+5. Load secrets and deploy:
+
+```bash
+# Add to .env.local (one line, token only — no braces, no ${...} syntax):
+#   KAMAL_REGISTRY_PASSWORD=ghp_your_token
+
+kamal secrets print   # should show token length ~40, NOT ":-}" at the end
+kamal setup           # first time only
+kamal deploy
+```
+
+If `kamal secrets print` shows `:-}` at the end, `.kamal/secrets` was using broken `${VAR:-...}` syntax (now fixed) or `.env.local` has a malformed line.
+
+Useful aliases: `kamal logs`, `kamal shell`. Health checks hit `GET /up`.
+
+Requires Kamal **2.12+** (`gem install kamal` or `bundle install` from the root `Gemfile`).
+
+If the SSH host/user differs, update `servers.web` (and optional `ssh.user`) in `config/deploy.yml`.
+
+### macOS / OrbStack deploy host notes
+
+Kamal expects **GNU** `cp` (`cp -rnT` for asset bridging). macOS BSD `cp` fails with `illegal option -- T`.
+
+On the deploy Mac:
+
+```bash
+brew install coreutils
+sudo ln -sfn "$(brew --prefix coreutils)/bin/gcp" /usr/local/bin/cp
+```
+
+Kamal prepends `/usr/local/bin` to `PATH`, so that symlink is picked up.
+
+Also avoid broken Docker Hub `credsStore` entries in `~/.docker/config.json` on that host (they break pulls of public images like `basecamp/kamal-proxy`).
+
 ## UI theming
 
 App styling lives in `src/styles/mbulu.css`. Change the theme tokens at the top of that file to restyle colors, radii, and layout width.
