@@ -1,0 +1,10 @@
+# Add to /Users/mizu/server/Caddyfile on the deploy host, then reload Caddy.
+# Port 3010 is reserved for mbulu kamal-proxy (3001 is used by bashenga).
+
+http://mbulu.mboya.dev {
+	reverse_proxy host.docker.internal:3010 {
+		flush_interval -1
+		header_up Host {host}
+		header_up X-Forwarded-Proto https
+	}
+}
