@@ -49,13 +49,33 @@ Copy `.env.example` and fill in:
 ## Scripts
 
 ```bash
-npm run dev      # local development
-npm run build    # production build
-npm run start    # serve the production build
-npm run lint     # lint
-npm test         # unit tests
+npm run dev         # local development
+npm run build       # production build
+npm run start       # serve the production build
+npm run lint        # lint
+npm run typecheck   # TypeScript check
+npm test            # unit tests
 npm run test:watch
 ```
+
+## CI / CD
+
+GitHub Actions runs on every push and pull request to `main`:
+
+- `CI` — `npm ci`, lint, typecheck, tests, and production build
+- `Deploy` — production deploy to Vercel on pushes to `main` (and manual `workflow_dispatch`)
+
+### Deploy secrets
+
+Add these repository secrets (Settings → Secrets and variables → Actions), plus a GitHub Environment named `production` if you use environment protection:
+
+| Secret | Purpose |
+| --- | --- |
+| `VERCEL_TOKEN` | Vercel access token |
+| `VERCEL_ORG_ID` | Vercel team/org id |
+| `VERCEL_PROJECT_ID` | Vercel project id |
+
+Configure real chat env vars in the Vercel project (not in GitHub Actions). Until the Vercel secrets exist, the Deploy workflow will fail; CI still gates merges.
 
 ## UI theming
 
