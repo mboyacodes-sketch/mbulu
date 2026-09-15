@@ -7,7 +7,12 @@ image: mboyacodes-sketch/mbulu
 # Deploy to these servers (SSH).
 servers:
   web:
-    - 10.7.0.1
+    hosts:
+      - 10.7.0.1
+    options:
+      # Reach Ollama (and other host services) from the app container.
+      add-host:
+        - host.docker.internal:host-gateway
 
 # Keep kamal-proxy for zero-downtime deploys, but do NOT take ports 80/443 —
 # Caddy already terminates TLS for mboya.dev. Bind HTTP only on localhost;
@@ -58,6 +63,8 @@ env:
     NODE_ENV: production
     HOSTNAME: 0.0.0.0
     PORT: "3000"
+    # Talk to Ollama on the deploy host (not the public ollama.mboya.dev subdomain).
+    CHAT_BASE_URL: http://host.docker.internal:11434/v1
     CHAT_ALLOWED_ORIGINS: https://mbulu.mboya.dev
     CHAT_RATE_LIMIT_PER_MIN: "8"
     CHAT_RATE_LIMIT_PER_HOUR: "60"
@@ -66,7 +73,6 @@ env:
     CHAT_CONTEXT_MESSAGES: "16"
   secret:
     - CHAT_API_KEY
-    - CHAT_BASE_URL
     - CHAT_MODEL
     - CHAT_SYSTEM_PROMPT
     - CHAT_ACCESS_SECRET
