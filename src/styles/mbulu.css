@@ -1,0 +1,1146 @@
+/*
+  Mbulu UI stylesheet
+  -------------------
+  Edit the THEME TOKENS section to restyle the app.
+  Component classes below consume those tokens.
+*/
+
+/* ==========================================================================
+   THEME TOKENS — change colors, sizes, radii here
+   ========================================================================== */
+
+:root {
+  /* Brand / surfaces */
+  --fog: #e4ecea;
+  --fog-deep: #cfdeda;
+  --mist: #edf3f1;
+  --surface: #f7faf9;
+  --surface-strong: rgba(247, 250, 249, 0.92);
+  --surface-soft: rgba(247, 250, 249, 0.8);
+  --surface-faint: rgba(247, 250, 249, 0.7);
+
+  /* Text */
+  --ink: #17241f;
+  --ink-soft: #3a4b44;
+  --ink-muted: #6a7a73;
+
+  /* Accents */
+  --accent: #1f5c52;
+  --accent-strong: #174840;
+  --accent-ink: #f4faf7;
+  --accent-glow: rgba(72, 140, 122, 0.26);
+  --accent-mist: rgba(120, 168, 186, 0.22);
+  --selection: rgba(31, 92, 82, 0.22);
+
+  /* Lines & shadows */
+  --line: rgba(28, 64, 54, 0.14);
+  --shadow-composer: 0 18px 50px -28px rgba(28, 40, 36, 0.45);
+  --shadow-user: 0 10px 30px -18px rgba(20, 74, 68, 0.55);
+
+  /* Layout */
+  --chat-max: 54.6rem;
+  --radius-pill: 999px;
+  --radius-composer: 1.6rem;
+  --radius-bubble: 1.15rem;
+  --radius-control: 1.45rem;
+
+  /* Type */
+  --font-ui: var(--font-body), system-ui, sans-serif;
+  --font-brand: var(--font-display), var(--font-body), system-ui, sans-serif;
+  --text-message: 1.05rem;
+  --text-message-mobile: 1.02rem;
+
+  /* Typing bubble (iMessage-like) */
+  --typing-bg: #e9e9eb;
+  --typing-dot: #8e8e93;
+
+  /* Code block */
+  --code-bg: #15201c;
+  --code-border: rgba(40, 70, 60, 0.35);
+  --code-fg: #dceae3;
+  --code-lang-fg: #b7d7c8;
+  --code-comment: #7f958a;
+  --code-keyword: #7ec8b4;
+  --code-string: #d6b57a;
+  --code-title: #9fd0ff;
+  --code-type: #c3b4f5;
+  --code-number: #e0a08a;
+  --code-var: #b7d7c8;
+  --code-delete: #e08a8a;
+
+  /* App aliases */
+  --background: var(--fog);
+  --foreground: var(--ink);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  background:
+    radial-gradient(1100px 640px at 8% -8%, var(--accent-glow), transparent 58%),
+    radial-gradient(900px 560px at 96% 0%, var(--accent-mist), transparent 52%),
+    linear-gradient(165deg, var(--mist) 0%, var(--fog) 45%, var(--fog-deep) 100%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   MOTION
+   ========================================================================== */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-rise {
+  animation: rise 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ==========================================================================
+   SHARED CONTROLS
+   ========================================================================== */
+
+.mbulu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  border-radius: var(--radius-pill);
+  border: 0;
+  padding: 0 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease,
+    opacity 160ms ease;
+}
+
+.mbulu-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.mbulu-btn:enabled:active {
+  transform: scale(0.95);
+}
+
+.mbulu-btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.mbulu-btn-primary:enabled:hover {
+  background: var(--accent-strong);
+}
+
+.mbulu-btn-ghost {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink-soft);
+}
+
+.mbulu-btn-ghost:enabled:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.mbulu-chip {
+  min-height: 2.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.mbulu-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.mbulu-chip:enabled:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.mbulu-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  margin-bottom: 0.125rem;
+  border-radius: var(--radius-pill);
+  border: 0;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease,
+    opacity 160ms ease;
+}
+
+.mbulu-icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.mbulu-icon-btn:enabled:active {
+  transform: scale(0.95);
+}
+
+.mbulu-icon-btn-ghost {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--ink-soft);
+}
+
+.mbulu-icon-btn-ghost:enabled:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.mbulu-icon-btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.mbulu-icon-btn-primary:enabled:hover {
+  background: var(--accent-strong);
+}
+
+.mbulu-icon-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.mbulu-stop-square {
+  display: block;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 0.2rem;
+  background: currentColor;
+}
+
+/* ==========================================================================
+   APP SHELL
+   ========================================================================== */
+
+.mbulu-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.mbulu-header {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem 0;
+}
+
+.mbulu-brand {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.mbulu-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.mbulu-scroller {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--chat-max);
+  margin-inline: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4.75rem 1rem 11rem;
+}
+
+.mbulu-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mbulu-thread-end {
+  width: 100%;
+  height: 1px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   ACCESS GATE
+   ========================================================================== */
+
+.mbulu-gate {
+  position: relative;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+.mbulu-gate-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: 6rem 1rem;
+}
+
+.mbulu-gate-title {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(2rem, 8vw, 2.5rem);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.mbulu-gate-copy {
+  margin: 0.75rem 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.mbulu-gate-form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.mbulu-input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.mbulu-input::placeholder {
+  color: var(--ink-muted);
+}
+
+.mbulu-input:focus {
+  border-color: var(--accent);
+}
+
+.mbulu-error {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #be123c;
+}
+
+/* ==========================================================================
+   EMPTY STATE
+   ========================================================================== */
+
+.mbulu-empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.mbulu-empty-title {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(2.4rem, 10vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.mbulu-empty-copy {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.mbulu-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.mbulu-suggestion {
+  min-height: 2.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--surface-faint);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.mbulu-suggestion:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   MESSAGES
+   ========================================================================== */
+
+.mbulu-message {
+  max-width: min(100%, 36rem);
+  font-size: var(--text-message-mobile);
+  line-height: 1.7;
+}
+
+.mbulu-message-user {
+  margin-left: auto;
+  border-radius: 1.35rem 1.35rem 0.55rem 1.35rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.65rem 0.9rem;
+  box-shadow: var(--shadow-user);
+}
+
+.mbulu-message-assistant {
+  margin-right: auto;
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   COMPOSER DOCK
+   ========================================================================== */
+
+.mbulu-dock {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: 2rem 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.mbulu-dock-fade {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 10rem;
+  background: linear-gradient(
+    to top,
+    var(--fog),
+    color-mix(in srgb, var(--fog) 90%, transparent),
+    transparent
+  );
+}
+
+.mbulu-dock-inner {
+  pointer-events: auto;
+  position: relative;
+  width: 100%;
+  max-width: var(--chat-max);
+  margin-inline: auto;
+}
+
+.mbulu-composer {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+  gap: 0.4rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  padding: 0.4rem;
+  box-shadow: var(--shadow-composer);
+  backdrop-filter: blur(12px);
+}
+
+.mbulu-composer-input {
+  flex: 1;
+  min-height: 3rem;
+  max-height: 10rem;
+  resize: none;
+  border: 0;
+  background: transparent;
+  padding: 0.75rem 0.65rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  outline: none;
+}
+
+.mbulu-composer-input::placeholder {
+  color: var(--ink-muted);
+}
+
+.mbulu-composer-input:disabled {
+  opacity: 0.6;
+}
+
+.mbulu-hint {
+  position: relative;
+  margin: 0.5rem 0 0;
+  padding-inline: 0.5rem;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+
+.mbulu-hint-error {
+  text-align: left;
+  color: #be123c;
+  font-size: 0.875rem;
+}
+
+/* Voice listening panel */
+.mbulu-voice-panel {
+  margin-bottom: 0.25rem;
+  border-radius: var(--radius-composer);
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  padding: 1rem;
+  text-align: center;
+  box-shadow: var(--shadow-composer);
+  backdrop-filter: blur(12px);
+}
+
+.mbulu-voice-title {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.mbulu-voice-transcript {
+  margin: 0.25rem 0 0;
+  min-height: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mbulu-voice-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* ==========================================================================
+   VOICE ORB
+   ========================================================================== */
+
+.voice-orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  margin: 0 auto 0.35rem;
+}
+
+.voice-orb-core {
+  position: relative;
+  z-index: 2;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: radial-gradient(circle at 30% 30%, #7ec8b4, var(--accent) 55%, #12352f 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+    0 10px 30px rgba(20, 74, 68, 0.35);
+}
+
+.voice-orb-blob {
+  position: absolute;
+  inset: -20%;
+  border-radius: 40% 60% 55% 45%;
+  filter: blur(8px);
+  opacity: 0.75;
+  animation: voice-morph 2.8s ease-in-out infinite;
+}
+
+.voice-orb-blob-a {
+  background: #9fd0c0;
+  animation-delay: 0ms;
+}
+
+.voice-orb-blob-b {
+  background: #4f9f8f;
+  mix-blend-mode: soft-light;
+  animation-delay: 400ms;
+  animation-direction: reverse;
+}
+
+.voice-orb-blob-c {
+  background: #c9e4ff;
+  opacity: 0.45;
+  animation-delay: 800ms;
+}
+
+.voice-orb-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(31, 92, 82, 0.28);
+  animation: voice-ring 2.2s ease-out infinite;
+}
+
+.voice-orb-ring-b {
+  animation-delay: 700ms;
+}
+
+.voice-wave {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.22rem;
+  height: 1.1rem;
+}
+
+.voice-wave i {
+  display: block;
+  width: 0.18rem;
+  height: 0.35rem;
+  border-radius: var(--radius-pill);
+  background: rgba(244, 250, 247, 0.92);
+  animation: voice-bar 0.9s ease-in-out infinite;
+}
+
+.voice-wave i:nth-child(1) {
+  animation-delay: 0ms;
+}
+.voice-wave i:nth-child(2) {
+  animation-delay: 100ms;
+  height: 0.55rem;
+}
+.voice-wave i:nth-child(3) {
+  animation-delay: 180ms;
+  height: 0.85rem;
+}
+.voice-wave i:nth-child(4) {
+  animation-delay: 100ms;
+  height: 0.55rem;
+}
+.voice-wave i:nth-child(5) {
+  animation-delay: 0ms;
+}
+
+@keyframes voice-ring {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes voice-morph {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+    border-radius: 42% 58% 50% 50%;
+  }
+  50% {
+    transform: rotate(18deg) scale(1.08);
+    border-radius: 58% 42% 55% 45%;
+  }
+}
+
+@keyframes voice-bar {
+  0%,
+  100% {
+    transform: scaleY(0.55);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1.35);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   TYPING INDICATOR
+   ========================================================================== */
+
+.imessage-typing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  min-width: 3.4rem;
+  padding: 0.72rem 0.95rem;
+  border-radius: var(--radius-bubble);
+  background: var(--typing-bg);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  animation: thinking-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.imessage-typing-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: var(--radius-pill);
+  background: var(--typing-dot);
+  animation: imessage-dot 1.25s ease-in-out infinite;
+}
+
+.imessage-typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.imessage-typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes thinking-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes imessage-dot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-0.28rem);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   MARKDOWN
+   ========================================================================== */
+
+.md-content {
+  font-size: var(--text-message);
+  line-height: 1.7;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.md-content > :first-child {
+  margin-top: 0;
+}
+
+.md-content > :last-child {
+  margin-bottom: 0;
+}
+
+.md-content p {
+  margin: 0.55em 0;
+}
+
+.md-content h1,
+.md-content h2,
+.md-content h3,
+.md-content h4 {
+  margin: 1em 0 0.4em;
+  font-family: var(--font-brand);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.md-content h1 {
+  font-size: 1.45em;
+}
+
+.md-content h2 {
+  font-size: 1.28em;
+}
+
+.md-content h3,
+.md-content h4 {
+  font-size: 1.12em;
+}
+
+.md-content ul,
+.md-content ol {
+  margin: 0.55em 0;
+  padding-left: 1.35em;
+}
+
+.md-content li {
+  margin: 0.25em 0;
+}
+
+.md-content li > ul,
+.md-content li > ol {
+  margin: 0.2em 0;
+}
+
+.md-content blockquote {
+  margin: 0.75em 0;
+  padding: 0.15em 0 0.15em 0.9em;
+  border-left: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--ink-soft);
+}
+
+.md-content hr {
+  margin: 1.1em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.md-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.md-content a:hover {
+  color: var(--accent-strong);
+}
+
+.md-content strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.md-content em {
+  font-style: italic;
+}
+
+.md-content .md-inline-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  padding: 0.12em 0.38em;
+  border-radius: 0.4em;
+  background: rgba(28, 64, 54, 0.08);
+  color: var(--accent-strong);
+}
+
+.md-content table {
+  width: 100%;
+  margin: 0.8em 0;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  overflow-x: auto;
+  display: block;
+}
+
+.md-content th,
+.md-content td {
+  padding: 0.45em 0.65em;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.md-content th {
+  background: rgba(28, 64, 54, 0.06);
+  font-weight: 600;
+}
+
+.md-content img {
+  max-width: 100%;
+  border-radius: 0.75em;
+}
+
+/* ==========================================================================
+   CODE BLOCKS
+   ========================================================================== */
+
+.md-codeblock {
+  margin: 0.85em 0;
+  overflow: hidden;
+  border-radius: 0.95em;
+  border: 1px solid var(--code-border);
+  background: var(--code-bg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.md-codeblock-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.45em 0.7em 0.2em;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+}
+
+.md-codeblock-lang {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(168, 210, 190, 0.22);
+  background: rgba(94, 148, 132, 0.16);
+  padding: 0.18em 0.55em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--code-lang-fg);
+}
+
+.md-codeblock-pre {
+  margin: 0 !important;
+  padding: 0.35em 0.95em 0.95em !important;
+  overflow-x: auto;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.md-codeblock-pre code,
+.md-codeblock-pre .hljs {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.86em;
+  line-height: 1.6;
+  background: transparent !important;
+  color: var(--code-fg);
+  padding: 0;
+  white-space: pre;
+}
+
+.md-codeblock .hljs-comment,
+.md-codeblock .hljs-quote {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+.md-codeblock .hljs-keyword,
+.md-codeblock .hljs-selector-tag,
+.md-codeblock .hljs-literal,
+.md-codeblock .hljs-section,
+.md-codeblock .hljs-link {
+  color: var(--code-keyword);
+}
+
+.md-codeblock .hljs-string,
+.md-codeblock .hljs-doctag,
+.md-codeblock .hljs-addition,
+.md-codeblock .hljs-attribute,
+.md-codeblock .hljs-meta .hljs-string {
+  color: var(--code-string);
+}
+
+.md-codeblock .hljs-title,
+.md-codeblock .hljs-title.function_,
+.md-codeblock .hljs-section {
+  color: var(--code-title);
+}
+
+.md-codeblock .hljs-title.class_,
+.md-codeblock .hljs-type,
+.md-codeblock .hljs-name,
+.md-codeblock .hljs-selector-class,
+.md-codeblock .hljs-selector-id,
+.md-codeblock .hljs-built_in {
+  color: var(--code-type);
+}
+
+.md-codeblock .hljs-number,
+.md-codeblock .hljs-symbol,
+.md-codeblock .hljs-bullet,
+.md-codeblock .hljs-meta,
+.md-codeblock .hljs-regexp {
+  color: var(--code-number);
+}
+
+.md-codeblock .hljs-variable,
+.md-codeblock .hljs-template-variable,
+.md-codeblock .hljs-params,
+.md-codeblock .hljs-attr,
+.md-codeblock .hljs-property {
+  color: var(--code-var);
+}
+
+.md-codeblock .hljs-deletion {
+  color: var(--code-delete);
+}
+
+.md-codeblock .hljs-emphasis {
+  font-style: italic;
+}
+
+.md-codeblock .hljs-strong {
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (min-width: 640px) {
+  .mbulu-header {
+    padding-inline: 2rem;
+    padding-top: 2rem;
+  }
+
+  .mbulu-scroller {
+    padding: 6rem 2rem 12rem;
+  }
+
+  .mbulu-thread {
+    gap: 1.5rem;
+  }
+
+  .mbulu-message {
+    max-width: 92%;
+    font-size: var(--text-message);
+  }
+
+  .mbulu-message-user {
+    padding: 0.75rem 1rem;
+  }
+
+  .mbulu-empty-copy {
+    font-size: 1.125rem;
+  }
+
+  .mbulu-dock {
+    padding-inline: 1.5rem;
+  }
+
+  .mbulu-composer {
+    gap: 0.5rem;
+    border-radius: var(--radius-composer);
+    padding: 0.5rem;
+  }
+
+  .mbulu-composer-input {
+    padding-inline: 0.75rem;
+  }
+
+  .mbulu-icon-btn {
+    margin-bottom: 0.25rem;
+  }
+
+  .mbulu-icon-btn-primary {
+    margin-right: 0.25rem;
+  }
+
+  .mbulu-hint {
+    font-size: 0.75rem;
+  }
+
+  .mbulu-voice-panel {
+    padding-inline: 1.25rem;
+  }
+
+  .mbulu-gate-main {
+    padding-inline: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .md-content {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .voice-orb {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+}
