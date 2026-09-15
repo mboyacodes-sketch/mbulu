@@ -27,6 +27,7 @@ Thumbs.db
 *.pem
 *.log
 *.md
+!README.md
 
 # debug
 npm-debug.log*
