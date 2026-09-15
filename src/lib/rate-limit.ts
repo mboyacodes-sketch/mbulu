@@ -14,6 +14,10 @@ export type RateLimitResult =
   | { ok: true; remaining: number }
   | { ok: false; retryAfterSec: number };
 
+export function resetRateLimits() {
+  buckets.clear();
+}
+
 export function checkRateLimit(
   key: string,
   limit: number,
