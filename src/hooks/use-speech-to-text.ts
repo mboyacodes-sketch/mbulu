@@ -12,7 +12,9 @@ export function useSpeechToText({
   lang = "en-US",
   onError,
 }: UseSpeechToTextOptions = {}) {
-  const [supported, setSupported] = useState(false);
+  const [supported] = useState(() =>
+    Boolean(getSpeechRecognitionConstructor()),
+  );
   const [listening, setListening] = useState(false);
   const [committedText, setCommittedText] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
@@ -23,10 +25,6 @@ export function useSpeechToText({
   useEffect(() => {
     onErrorRef.current = onError;
   }, [onError]);
-
-  useEffect(() => {
-    setSupported(Boolean(getSpeechRecognitionConstructor()));
-  }, []);
 
   const stop = useCallback(() => {
     const recognition = recognitionRef.current;
