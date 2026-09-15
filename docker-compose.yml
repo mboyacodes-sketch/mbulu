@@ -1,0 +1,19 @@
+services:
+  mbulu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mbulu:local
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env.local
+        required: false
+      - path: .env
+        required: false
+    environment:
+      # Override in .env / .env.local; defaults keep local Docker usable.
+      CHAT_ALLOWED_ORIGINS: ${CHAT_ALLOWED_ORIGINS:-http://localhost:3000}
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+    restart: unless-stopped
