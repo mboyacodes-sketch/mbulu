@@ -53,6 +53,8 @@ npm run dev      # local development
 npm run build    # production build
 npm run start    # serve the production build
 npm run lint     # lint
+npm test         # unit tests
+npm run test:watch
 ```
 
 ## UI theming
