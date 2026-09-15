@@ -70,7 +70,7 @@ export function useChat() {
       ),
     );
 
-    if (scroll.stickToBottomRef.current) {
+    if (scroll.shouldStickToBottom()) {
       scroll.scrollToBottom();
     }
   }
@@ -94,7 +94,7 @@ export function useChat() {
       const storedMessages = loadChatMemory();
       if (storedMessages.length > 0) {
         setMessages(storedMessages);
-        scroll.stickToBottomRef.current = true;
+        scroll.stickToBottom();
       }
 
       try {
@@ -132,12 +132,6 @@ export function useChat() {
   }, [messages, ready, isStreaming]);
 
   useEffect(() => {
-    if (speech.listening) {
-      setInput(speech.draftText);
-    }
-  }, [speech.listening, speech.draftText]);
-
-  useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = "0px";
@@ -159,7 +153,7 @@ export function useChat() {
     setMessages([]);
     setError(null);
     setInput("");
-    scroll.stickToBottomRef.current = true;
+    scroll.stickToBottom();
   }
 
   async function unlock() {
