@@ -48,9 +48,11 @@
   --font-ui: var(--font-body), system-ui, sans-serif;
   --font-brand: var(--font-display), var(--font-body), system-ui, sans-serif;
   --text-message: 1.05rem;
-  --text-message-mobile: 0.9375rem;
+  /* Mobile sizes are multiples of the system/root size (see max-width 639px). */
+  --text-message-mobile: 1rem;
   --text-ui-mobile: 0.875rem;
-  --text-brand-mobile: 1.75rem;
+  --text-brand-mobile: 1.65em;
+  --text-copy-mobile: 0.9375rem;
 
   /* Typing bubble (iMessage-like) */
   --typing-bg: #e9e9eb;
@@ -1136,14 +1138,32 @@ body {
 }
 
 @media (max-width: 639px) {
+  /*
+    Adopt the device text size (browser zoom + iOS Dynamic Type).
+    -apple-system-body sets the metric; we keep brand fonts on body.
+  */
+  html {
+    font-size: 100%;
+  }
+
+  @supports (font: -apple-system-body) {
+    html {
+      font: -apple-system-body;
+    }
+
+    body {
+      font-family: var(--font-ui);
+    }
+  }
+
   .mbulu-header-brand {
-    font-size: 0.8125rem;
+    font-size: var(--text-ui-mobile);
   }
 
   .mbulu-header-btn {
     min-height: 2rem;
     padding: 0.3rem 0.65rem;
-    font-size: 0.7rem;
+    font-size: 0.8125rem;
   }
 
   .mbulu-empty-title {
@@ -1151,14 +1171,14 @@ body {
   }
 
   .mbulu-empty-copy {
-    font-size: 0.9rem;
+    font-size: var(--text-copy-mobile);
     line-height: 1.55;
   }
 
   .mbulu-suggestion {
     min-height: 2.25rem;
     padding: 0.4rem 0.75rem;
-    font-size: 0.8125rem;
+    font-size: var(--text-ui-mobile);
   }
 
   .mbulu-message {
@@ -1166,7 +1186,6 @@ body {
     line-height: 1.55;
   }
 
-  /* Inherit message size — do not bump markdown back up to 1rem. */
   .md-content {
     font-size: inherit;
     line-height: 1.55;
@@ -1186,12 +1205,12 @@ body {
 
   .mbulu-composer-input,
   .mbulu-input {
-    /* Keep ≥16px so iOS Safari does not zoom on focus. */
-    font-size: 16px;
+    /* Track system size; floor at 16px to avoid iOS focus zoom. */
+    font-size: max(1rem, 16px);
   }
 
   .mbulu-hint {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 
   .mbulu-gate-title {
@@ -1199,7 +1218,7 @@ body {
   }
 
   .mbulu-gate-copy {
-    font-size: 0.9rem;
+    font-size: var(--text-copy-mobile);
     line-height: 1.55;
   }
 
