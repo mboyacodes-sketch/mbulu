@@ -84,8 +84,37 @@ const LANGUAGE_LABELS: Record<string, string> = {
   plaintext: "Text",
 };
 
+const AUTO_LANGUAGES = [
+  "javascript",
+  "typescript",
+  "python",
+  "bash",
+  "json",
+  "html",
+  "css",
+  "sql",
+  "go",
+  "rust",
+  "ruby",
+  "java",
+  "yaml",
+  "markdown",
+] as const;
+
+/** Skip highlighter on huge payloads to limit ReDoS / main-thread cost. */
+const MAX_HIGHLIGHT_CHARS = 40_000;
+
 function labelFor(language: string) {
   return LANGUAGE_LABELS[language.toLowerCase()] ?? language;
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function extractCode(children: ReactNode): { code: string; className?: string } {
@@ -116,36 +145,30 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
     const hinted =
       /language-([a-z0-9_+-]+)/i.exec(className ?? extracted.className ?? "")?.[1] ??
       "";
+    const languageHint = hinted.toLowerCase();
 
-    if (hinted && hljs.getLanguage(hinted)) {
+    if (extracted.code.length > MAX_HIGHLIGHT_CHARS) {
       return {
-        language: hinted.toLowerCase(),
-        html: hljs.highlight(extracted.code, { language: hinted }).value,
+        language: languageHint && hljs.getLanguage(languageHint) ? languageHint : "text",
+        html: escapeHtml(extracted.code),
       };
     }
 
-    const auto = hljs.highlightAuto(extracted.code, [
-      "javascript",
-      "typescript",
-      "python",
-      "bash",
-      "json",
-      "html",
-      "css",
-      "sql",
-      "go",
-      "rust",
-      "ruby",
-      "java",
-      "yaml",
-      "markdown",
-    ]);
+    if (languageHint && hljs.getLanguage(languageHint)) {
+      return {
+        language: languageHint,
+        html: hljs.highlight(extracted.code, {
+          language: languageHint,
+          ignoreIllegals: true,
+        }).value,
+      };
+    }
+
+    const auto = hljs.highlightAuto(extracted.code, [...AUTO_LANGUAGES]);
 
     return {
-      language: (auto.language ?? (hinted || "text")).toLowerCase(),
-      html:
-        auto.value ||
-        hljs.highlight(extracted.code, { language: "markdown" }).value,
+      language: (auto.language ?? (languageHint || "text")).toLowerCase(),
+      html: auto.value || escapeHtml(extracted.code),
     };
   }, [children, className]);
 
