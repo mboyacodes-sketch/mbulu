@@ -35,6 +35,14 @@ export function useChatScroll({
     });
   }
 
+  function stickToBottom() {
+    stickToBottomRef.current = true;
+  }
+
+  function shouldStickToBottom() {
+    return stickToBottomRef.current;
+  }
+
   useLayoutEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller || !enabled) return;
@@ -60,8 +68,9 @@ export function useChatScroll({
   return {
     scrollerRef,
     bottomRef,
-    stickToBottomRef,
     scrollToBottom,
     pinToBottom,
+    stickToBottom,
+    shouldStickToBottom,
   };
 }
