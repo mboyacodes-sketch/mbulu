@@ -12,11 +12,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-# Build-time placeholders; runtime env is injected by Compose/host.
-ENV CHAT_API_KEY=build
-ENV CHAT_BASE_URL=https://example.com/v1
-ENV CHAT_MODEL=build
-ENV CHAT_SYSTEM_PROMPT=build
 
 RUN npm run build
 
