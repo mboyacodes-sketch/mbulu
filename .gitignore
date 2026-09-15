@@ -41,6 +41,17 @@ lerna-debug.log*
 .env.*
 !.env.example
 
+# Kamal — keep only the example secrets file in git
+.kamal/secrets
+.kamal/secrets-common
+.kamal/secrets.*
+!.kamal/secrets.example
+
+# Bundler (Kamal Gemfile tooling)
+.bundle/
+/vendor/bundle
+/vendor/cache
+
 # local overrides
 *.local
 
@@ -53,6 +64,9 @@ lerna-debug.log*
 
 # vercel
 .vercel
+
+# docker / kamal local state
+docker-compose.override.yml
 
 # typescript
 *.tsbuildinfo
