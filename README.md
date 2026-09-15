@@ -55,7 +55,7 @@ Copy `.env.example` and fill in:
 | Variable | Purpose |
 | --- | --- |
 | `CHAT_API_KEY` | Bearer token for the chat provider |
-| `CHAT_BASE_URL` | OpenAI-compatible API base URL (usually ends with `/v1`) |
+| `CHAT_BASE_URL` | OpenAI-compatible API base URL (usually ends with `/v1`). Prefer host-local Ollama (`http://127.0.0.1:11434/v1` or `http://host.docker.internal:11434/v1` from containers). |
 | `CHAT_MODEL` | Model id to use |
 | `CHAT_SYSTEM_PROMPT` | System prompt for the assistant |
 | `CHAT_ACCESS_SECRET` | Optional access code required to use the app |
