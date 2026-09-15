@@ -1,0 +1,87 @@
+# Name of your application. Used to uniquely configure containers.
+service: mbulu
+
+# Name of the container image (pushed to the registry below).
+image: mboyacodes-sketch/mbulu
+
+# Deploy to these servers (SSH).
+servers:
+  web:
+    - 10.7.0.1
+
+# Keep kamal-proxy for zero-downtime deploys, but do NOT take ports 80/443 —
+# Caddy already terminates TLS for mboya.dev. Bind HTTP only on localhost;
+# Caddy reverse_proxies to it (see config/Caddyfile.mbulu).
+proxy:
+  ssl: false
+  host: mbulu.mboya.dev
+  app_port: 3000
+  forward_headers: true
+  # Chat streams can run longer than the default 30s.
+  response_timeout: 300
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 5
+  # Avoid buffering streamed chat replies.
+  buffering:
+    requests: true
+    responses: false
+  run:
+    http_port: 3010
+    https_port: 3011
+    bind_ips:
+      - 127.0.0.1
+
+# GitHub Container Registry (GHCR).
+# Login username must be your personal GitHub user (PAT owner), not the org name.
+registry:
+  server: ghcr.io
+  username: mboya
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Deploy host is Apple Silicon (OrbStack) — must match linux/arm64.
+builder:
+  arch: arm64
+  # Use the working tree (not a clean git clone) so uncommitted files like /up
+  # are included until they are committed.
+  context: .
+
+# Give Next.js time to boot before kamal-proxy fails the healthcheck.
+deploy_timeout: 60
+
+# Runtime env injected into the container.
+# Secrets are read from .kamal/secrets (never put raw values here).
+env:
+  clear:
+    NODE_ENV: production
+    HOSTNAME: 0.0.0.0
+    PORT: "3000"
+    CHAT_ALLOWED_ORIGINS: https://mbulu.mboya.dev
+    CHAT_RATE_LIMIT_PER_MIN: "8"
+    CHAT_RATE_LIMIT_PER_HOUR: "60"
+    CHAT_MAX_MESSAGES: "40"
+    CHAT_MAX_MESSAGE_CHARS: "32000"
+    CHAT_CONTEXT_MESSAGES: "16"
+  secret:
+    - CHAT_API_KEY
+    - CHAT_BASE_URL
+    - CHAT_MODEL
+    - CHAT_SYSTEM_PROMPT
+    - CHAT_ACCESS_SECRET
+
+# Keep Next.js hashed static assets available across rolling deploys.
+# Requires GNU cp on the host PATH (OrbStack Mac: ln -sf $(brew --prefix coreutils)/bin/gcp /usr/local/bin/cp).
+asset_path: /app/.next/static
+
+aliases:
+  shell: app exec --interactive --reuse "sh"
+  logs: app logs -f
+  console: app exec --interactive --reuse "node"
+
+# SSH user on the deploy host (MacBook Pro @ 10.7.0.1).
+ssh:
+  user: mizu
+
+minimum_version: 2.12.0
