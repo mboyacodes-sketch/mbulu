@@ -6,13 +6,21 @@ import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import type { Components } from "react-markdown";
 import { CodeBlock } from "@/components/code-block";
+import { safeHref } from "@/lib/safe-href";
 
 const components: Components = {
-  a: ({ href, children }) => (
-    <a href={href} target="_blank" rel="noreferrer noopener">
-      {children}
-    </a>
-  ),
+  a: ({ href, children }) => {
+    const safe = safeHref(href);
+    if (!safe) {
+      return <span>{children}</span>;
+    }
+
+    return (
+      <a href={safe} target="_blank" rel="noreferrer noopener">
+        {children}
+      </a>
+    );
+  },
   pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
   code: ({ className, children, ...props }) => {
     const text = String(children);
