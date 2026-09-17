@@ -28,6 +28,14 @@ Voice input via the mic control for browser speech recognition.
 
 ![Speech to text](screenshots/speech-to-text.png)
 
+## Launch video
+
+Cinematic vertical brag — typing into the composer, then a streaming reply with a highlighted code block.
+
+<video src="brag-output-2026-09-17-063218/brag.mp4" poster="brag-output-2026-09-17-063218/brag.jpg" controls playsinline width="360"></video>
+
+[Watch / download MP4](brag-output-2026-09-17-063218/brag.mp4) · [Poster](brag-output-2026-09-17-063218/brag.jpg)
+
 ## Features
 
 - Streaming chat against an OpenAI-compatible API
